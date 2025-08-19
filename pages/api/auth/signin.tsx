@@ -2,25 +2,28 @@ import { getProviders, signIn } from "next-auth/react";
 
 export default function SignIn({ providers }: any) {
   return (
-    <div className="min-h-screen flex items-center justify-center text-white">
+    <div className="flex justify-center items-center min-h-screen bg-black text-white">
       <div className="p-8 rounded-xl bg-black/40">
         <h1 className="text-3xl mb-6 text-yellow-400 text-center">Sign in</h1>
-        {Object.values(providers).map((provider: any) => (
-          <div key={provider.name} className="text-center">
-            <button
-              className="px-4 py-2 bg-yellow-500 hover:bg-yellow-400 rounded-md"
-              onClick={() => signIn(provider.id)}
-            >
-              Continue with {provider.name}
-            </button>
-          </div>
-        ))}
+        {providers &&
+          Object.values(providers).map((provider: any) => (
+            <div key={provider.name} className="text-center">
+              <button
+                className="px-6 py-3 bg-yellow-500 hover:bg-yellow-400 text-black font-semibold rounded-lg shadow-md transition-all"
+                onClick={() => signIn(provider.id)}
+              >
+                Sign in with {provider.name}
+              </button>
+            </div>
+          ))}
       </div>
     </div>
   );
 }
 
-SignIn.getInitialProps = async (context: any) => {
+export async function getServerSideProps() {
   const providers = await getProviders();
-  return { providers };
-};
+  return {
+    props: { providers },
+  };
+}

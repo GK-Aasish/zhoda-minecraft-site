@@ -1,27 +1,27 @@
 import { getProviders, signIn } from "next-auth/react";
 
-type Props = { providers: Record<string, any> | null };
-
-export default function SignIn({ providers }: Props) {
-  if (!providers || Object.keys(providers).length === 0) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-black text-white">
-        <div>No providers configured.</div>
-      </div>
-    );
-  }
+export default function SignIn({ providers }: any) {
+  const playClick = () => {
+    const audio = new Audio("/sounds/click.wav");
+    audio.play();
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black text-white">
-      <div className="p-8 rounded-xl bg-zinc-800">
-        <h1 className="text-3xl mb-6 text-yellow-400 text-center">Sign in</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-900 to-black font-minecraft">
+      <div className="p-8 rounded-xl bg-black/70 border-4 border-green-600 shadow-2xl">
+        <h1 className="text-3xl mb-6 text-green-400 text-center drop-shadow-lg">
+          Minecraft Login
+        </h1>
         {Object.values(providers).map((provider: any) => (
-          <div key={provider.name} className="text-center mb-4">
+          <div key={provider.name} className="text-center">
             <button
-              className="px-4 py-2 bg-yellow-500 hover:bg-yellow-400 rounded-md"
-              onClick={() => signIn(provider.id)}
+              onClick={() => {
+                playClick();
+                signIn(provider.id, { callbackUrl: "/" });
+              }}
+              className="px-6 py-3 bg-green-600 hover:bg-green-500 text-black font-bold rounded-lg shadow-md transition-all transform hover:scale-105"
             >
-              Continue with {provider.name}
+              Sign in with {provider.name}
             </button>
           </div>
         ))}
@@ -32,5 +32,7 @@ export default function SignIn({ providers }: Props) {
 
 export async function getServerSideProps() {
   const providers = await getProviders();
-  return { props: { providers: providers ?? null } };
+  return {
+    props: { providers },
+  };
 }

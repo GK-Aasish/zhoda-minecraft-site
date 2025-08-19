@@ -10,8 +10,8 @@ export default NextAuth({
   ],
   callbacks: {
     async session({ session }) {
-      if (session?.user?.email === process.env.NEXT_PUBLIC_OWNER_EMAIL) {
-        (session.user as any).role = "admin";
+      if (session.user?.email === "gk.aasishkarki@gmail.com") {
+        (session.user as any).role = "superadmin";
       } else {
         (session.user as any).role = "user";
       }

@@ -7,7 +7,6 @@ export default function AdminHome() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  // Protect route
   useEffect(() => {
     if (status === "loading") return;
     if (!session || session.user?.role !== "superadmin") {
@@ -25,7 +24,6 @@ export default function AdminHome() {
 
   return (
     <div className="min-h-screen text-white p-8 bg-black">
-      {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl text-yellow-400">Admin Dashboard</h1>
         <div className="flex items-center gap-4">
@@ -43,7 +41,6 @@ export default function AdminHome() {
         If you can see this page, your account has the <b>superadmin</b> role.
       </p>
 
-      {/* Admin links */}
       <ul className="space-y-3">
         <li>
           <Link href="/admin/gallery" className="text-blue-400 hover:underline">
