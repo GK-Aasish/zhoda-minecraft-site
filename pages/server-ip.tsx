@@ -1,0 +1,143 @@
+import { useEffect, useState } from "react";
+import MinecraftHeader from "@/components/MinecraftHeader";
+import MinecraftCard from "@/components/MinecraftCard";
+import MinecraftButton from "@/components/MinecraftButton";
+import axios from "axios";
+
+type ServerInfo = {
+  host: string;         // backend host:port (DNS works now)
+  displayHost: string;  // shown to players
+  name: string;
+  desc: string;
+  comingSoon?: boolean; // 👈 mark if not live yet
+};
+
+const servers: ServerInfo[] = [
+  {
+    host: "N0_Nonsense.aternos.me:45126", // 👈 keep DNS, backend resolves IP
+    displayHost: "N0_Nonsense.aternos.me:45126",
+    name: "Survival Server",
+    desc: "Classic survival with Create & Farmer's Delight",
+  },
+  {
+    host: "",
+    displayHost: "creative.zhoda.net",
+    name: "Creative Server",
+    desc: "Creative building with mods",
+    comingSoon: true,
+  },
+  {
+    host: "",
+    displayHost: "modded.zhoda.net",
+    name: "Heavily Modded",
+    desc: "Advanced gameplay with 50+ mods",
+    comingSoon: true,
+  },
+  {
+    host: "",
+    displayHost: "pvp.zhoda.net",
+    name: "PvP Arena",
+    desc: "Combat-focused fun",
+    comingSoon: true,
+  },
+];
+
+export default function ServerIP() {
+  const [status, setStatus] = useState<Record<string, any>>({});
+  const [selected, setSelected] = useState<ServerInfo | null>(null);
+
+  const fetchStatus = async () => {
+    servers.forEach(async (srv) => {
+      if (srv.comingSoon || !srv.host) return; // skip unfinished servers
+      try {
+        const res = await axios.get(`/api/status?host=${srv.host}`);
+        if (res.data && res.data.online === true) {
+          setStatus((prev) => ({ ...prev, [srv.host]: res.data }));
+        } else {
+          setStatus((prev) => ({ ...prev, [srv.host]: { online: false } }));
+        }
+      } catch (err) {
+        console.error(`Error fetching status for ${srv.host}:`, err);
+        setStatus((prev) => ({ ...prev, [srv.host]: { online: false } }));
+      }
+    });
+  };
+
+  useEffect(() => {
+    fetchStatus(); // initial
+    const interval = setInterval(fetchStatus, 5000); // refresh every 30s
+    return () => clearInterval(interval);
+  }, []);
+
+  const copyToClipboard = (ip: string) => {
+    navigator.clipboard.writeText(ip);
+    alert(`Copied ${ip} to clipboard!`);
+  };
+
+  return (
+    <div className="min-h-screen bg-[url('/textures/stone.png')] text-white minecraft-font">
+      <MinecraftHeader />
+
+      <main className="container mx-auto py-12 px-6">
+        <h2 className="text-3xl text-yellow-400 text-center mb-12">
+          Choose Your Server
+        </h2>
+
+        {/* Grid of Servers */}
+        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          {servers.map((srv) => {
+            const info = status[srv.host];
+            return (
+              <MinecraftCard
+                key={srv.displayHost}
+                className={`${
+                  srv.comingSoon
+                    ? "opacity-50 blur-[1px] cursor-not-allowed"
+                    : "cursor-pointer hover:scale-105 transition-transform"
+                }`}
+                onClick={() => !srv.comingSoon && setSelected(srv)}
+              >
+                <h3 className="text-xl text-yellow-300 mb-2">{srv.name}</h3>
+                <p className="text-gray-200 mb-3">{srv.desc}</p>
+
+                {srv.comingSoon ? (
+                  <span className="text-yellow-500 font-bold">COMING SOON</span>
+                ) : info ? (
+                  info.online ? (
+                    <div className="flex justify-between mt-2">
+                      <span className="text-green-400">ONLINE</span>
+                      <span className="text-yellow-400">
+                        {info.players?.online ?? 0}/{info.players?.max ?? "?"}{" "}
+                        players
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="text-red-400">OFFLINE</span>
+                  )
+                ) : (
+                  <span className="text-gray-400">Loading...</span>
+                )}
+              </MinecraftCard>
+            );
+          })}
+        </div>
+
+        {/* Selected Server (only if NOT coming soon) */}
+        {selected && !selected.comingSoon && (
+          <MinecraftCard className="max-w-2xl mx-auto text-center mt-12">
+            <h3 className="text-2xl text-yellow-400 mb-4">{selected.name}</h3>
+            <p className="mb-4 text-lg text-white">
+              Server IP:{" "}
+              <span className="text-yellow-300">{selected.displayHost}</span>
+            </p>
+            <MinecraftButton
+              onClick={() => copyToClipboard(selected.displayHost)}
+            >
+              Copy IP
+            </MinecraftButton>
+          </MinecraftCard>
+        )}
+      </main>
+    </div>
+  );
+}

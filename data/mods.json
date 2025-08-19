@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Create",
+    "desc": "Automation, machines, and contraptions",
+    "link": "https://www.curseforge.com/minecraft/mc-mods/create"
+  },
+  {
+    "name": "Farmer's Delight",
+    "desc": "Cooking, farming, and new crops",
+    "link": "https://www.curseforge.com/minecraft/mc-mods/farmers-delight"
+  },
+  {
+    "name": "Ocean's Delight",
+    "desc": "Fishing and underwater expansion",
+    "link": "https://www.curseforge.com/minecraft/mc-mods/oceans-delight"
+  },
+  {
+    "name": "Dynamic Lights",
+    "desc": "Immersive dynamic lighting",
+    "link": "https://www.curseforge.com/minecraft/mc-mods/dynamic-lights"
+  },
+  {
+    "name": "JEI (Just Enough Items)",
+    "desc": "Recipe browser for all items",
+    "link": "https://www.curseforge.com/minecraft/mc-mods/jei"
+  },
+  {
+    "name": "OptiFine / Rubidium",
+    "desc": "Performance and visual enhancements",
+    "link": "https://optifine.net/downloads"
+  }
+]

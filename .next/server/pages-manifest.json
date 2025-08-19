@@ -1,0 +1,11 @@
+{
+  "/_app": "pages/_app.js",
+  "/_error": "pages/_error.js",
+  "/_document": "pages/_document.js",
+  "/": "pages/index.js",
+  "/server-ip": "pages/server-ip.js",
+  "/api/auth/[...nextauth]": "pages/api/auth/[...nextauth].js",
+  "/api/status": "pages/api/status.js",
+  "/gallery": "pages/gallery.js",
+  "/required-mods": "pages/required-mods.js"
+}

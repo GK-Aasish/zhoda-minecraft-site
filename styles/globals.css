@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Minecraft Font */
+.minecraft-font {
+  font-family: 'Press Start 2P', cursive;
+  text-shadow: 2px 2px 0 #000;
+}
+
+/* Enchantment Glint (hover only) */
+.enchant-glint {
+  position: relative;
+  overflow: hidden;
+}
+
+.enchant-glint::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.6), transparent);
+  transform: skewX(-20deg);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.enchant-glint:hover::after {
+  animation: shimmer 2s linear infinite;
+  opacity: 1;
+}
+
+@keyframes shimmer {
+  0% { left: -75%; }
+  100% { left: 125%; }
+}
+
+/* Block Crack Effect (on click) */
+.crack-effect { position: relative; overflow: hidden; }
+.crack-effect::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("/textures/crack.png") repeat;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-in-out;
+}
+.crack-effect:active::before { opacity: 0.8; }
